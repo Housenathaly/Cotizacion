@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cotización</title>
+
+  <style>
+    /* ========= IMPRESIÓN ========= */
+    @page { size: Letter; margin: 2.2cm; }
+    @media print { .no-print { display:none !important; } }
+
+    /* ========= BASE ========= */
+    :root{
+      --maxw: 980px;
+      --docw: 720px;
+      --line: #d7dbe2;
+      --ink: #0f172a;
+      --muted:#475569;
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --brand:#0b66b3;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-size:13px;
+      background:var(--bg);
+      color:var(--ink);
+    }
+
+    /* ========= FORM ========= */
+    .wrap{
+      max-width:var(--maxw);
+      margin:18px auto;
+      padding:0 14px;
+    }
+
+    .card{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:14px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      gap:10px;
+    }
+
+    @media(max-width:900px){
+      .grid{ grid-template-columns:1fr; }
+    }
+
+    .field label{
+      font-size:12px;
+      font-weight:800;
+      display:block;
+      margin-bottom:4px;
+    }
+
+    .req{ color:#b91c1c; }
+
+    input,textarea{
+      width:100%;
+      border:1px solid var(--line);
+      border-radius:8px;
+      padding:8px;
+      font-size:13px;
+    }
+
+    textarea{
+      resize:vertical;
+      min-height:70px;
+    }
+
+    .section-title{
+      font-weight:900;
+      margin:14px 0 6px;
+    }
+
+    .box{
+      border:1px dashed #c9cfdb;
+      border-radius:10px;
+      padding:10px;
+      background:#fbfcff;
+    }
+
+    .row{
+      border:1px solid var(--line);
+      border-radius:10px;
+      padding:10px;
+      background:#fff;
+      margin-bottom:8px;
+    }
+
+    .row-grid{
+      display:grid;
+      grid-template-columns:1.2fr 1.8fr 0.6fr 40px;
+      gap:8px;
+    }
+
+    /* ✅ Mejorar la fila de trabajos en celular */
+    @media (max-width: 700px){
+      .row-grid{ grid-template-columns: 1fr; }
+    }
+
+    .trash{
+      border:1px solid #fca5a5;
+      background:#fee2e2;
+      color:#991b1b;
+      font-weight:900;
+      border-radius:8px;
+    }
+
+    .btnrow{
+      margin-top:12px;
+      display:flex;
+      gap:10px;
+    }
+
+    button{
+      padding:8px 12px;
+      border-radius:8px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    button.primary{
+      background:var(--brand);
+      color:#fff;
+      border-color:var(--brand);
+    }
+
+    /* ========= DOCUMENTO ========= */
+    .doc-wrap{
+      max-width:var(--docw);
+      margin:18px auto;
+      padding:0 14px;
+    }
+
+    .doc{
+      background:#fff;
+      border:1px solid #cfd6e3;
+      padding:10px;
+    }
+
+    @media print{
+      body{ background:#fff; }
+      .doc-wrap{ max-width:none; margin:0; padding:0; }
+      .doc{ border:none; padding:0; }
+    }
+
+    .doc table{
+      width:100%;
+      border-collapse:collapse;
+      font-family:Arial,sans-serif;
+      font-size:12px;
+    }
+
+    .doc td,.doc th{
+      border:1px solid #000;
+      padding:4px 6px;
+    }
+
+    /* ===== HEADER COMPACTO ===== */
+    .header-table td{
+      padding:4px 6px;
+      line-height:1.05;
+    }
+
+    .logo{
+      width:140px;
+      text-align:center;
+    }
+
+    .logo img{
+      max-width:100px;
+      max-height:55px;
+      display:block;
+      margin:0 auto 2px;
+    }
+
+    .logo small{
+      font-size:11px;
+      font-weight:700;
+      color:#0b66b3;
+    }
+
+    .title{
+      text-align:center;
+      font-weight:800;
+      font-size:12px;
+    }
+
+    .client-data{
+      font-size:11px;
+      line-height:1.05;
+    }
+
+    .hdr-right{
+      width:210px;
+      text-align:right;
+    }
+
+    .bigtitle{
+      font-weight:900;
+      font-size:12.5px;
+    }
+
+    .section-h{ background:#f2f2f2; }
+
+    .note{ font-size:11px; }
+
+    .thanks{
+      text-align:center;
+      margin-top:18px;
+      font-weight:800;
+    }
+
+    /* imágenes */
+    .imgs-wrap{
+      display:flex;
+      justify-content:center;
+      gap:12px;
+    }
+
+    .imgs-wrap img{
+      border:1px solid #000;
+      padding:4px;
+      background:#fff;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ================= FORMULARIO ================= -->
+  <div class="wrap no-print">
+    <div class="card">
+
+      <div class="grid">
+        <div class="field">
+          <label># Cotización <span class="req">*</span></label>
+          <input id="cotNum">
+        </div>
+
+        <div class="field">
+          <label>Fecha <span class="req">*</span></label>
+          <input type="date" id="fecha">
+        </div>
+
+        <div class="field">
+          <label>Servicio</label>
+          <input id="servicio" value="Servicios Generales">
+        </div>
+
+        <div class="field">
+          <label>Nombre cliente <span class="req">*</span></label>
+          <input id="cliNombre">
+        </div>
+
+        <div class="field">
+          <label>Contacto <span class="req">*</span></label>
+          <!-- ✅ mobile-friendly numeric -->
+          <input id="cliContacto" inputmode="numeric">
+        </div>
+
+        <div class="field">
+          <label>Dirección <span class="req">*</span></label>
+          <input id="cliDir">
+        </div>
+      </div>
+
+      <div class="section-title">Trabajos <span class="req">*</span></div>
+      <div class="box" id="trabajos"></div>
+      <button onclick="addTrabajo()">➕ Agregar trabajo</button>
+
+      <div class="section-title">Imágenes (opcional)</div>
+      <input type="file" id="imagenes" accept="image/*" multiple>
+
+      <div class="section-title">Nota</div>
+      <textarea id="nota"></textarea>
+
+      <div class="section-title">Datos de quien cotiza</div>
+      <div class="grid">
+        <input id="miNombre" value="José Enrique Carrillo">
+        <input id="miEmail" value="josecarrillo2112@gmail.com">
+        <!-- ✅ mobile-friendly numeric -->
+        <input id="miContacto" value="64301895" inputmode="numeric">
+      </div>
+
+      <div class="btnrow">
+        <button class="primary" onclick="generar()">📄 Generar</button>
+        <button onclick="window.print()">🖨️ Imprimir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= DOCUMENTO ================= -->
+  <div class="doc-wrap">
+    <div class="doc" id="doc">
+
+      <table class="header-table">
+        <tr>
+          <td class="logo">
+            <img src="img/Logojc.png" alt="Logo">
+            <small id="outServicio">Servicios Generales</small>
+          </td>
+
+          <td>
+            <div class="title">DETALLES DE CLIENTE</div>
+            <div class="client-data">
+              <div><b>Nombre:</b> <span id="outCliNombre"></span></div>
+              <div><b>Contacto:</b> <span id="outCliContacto"></span></div>
+              <div><b>Dirección:</b> <span id="outCliDir"></span></div>
+            </div>
+          </td>
+
+          <td class="hdr-right">
+            <div class="bigtitle">COTIZACIÓN #<span id="outCotNum"></span></div>
+            <div><b>Fecha:</b> <span id="outFecha"></span></div>
+          </td>
+        </tr>
+      </table>
+
+      <div class="section-title">Detalle de trabajos a realizar</div>
+
+      <table>
+        <tr class="section-h">
+          <th>DESCRIPCIÓN</th>
+          <th>DETALLES</th>
+          <th>COSTO</th>
+        </tr>
+
+        <tbody id="outTrabajosBody"></tbody>
+
+        <tr>
+          <td colspan="2" style="text-align:right"><b>TOTAL</b></td>
+          <td style="text-align:right"><b id="outTotal">0.00</b></td>
+        </tr>
+      </table>
+
+      <div id="imgsSection" style="display:none; margin-top:12px;">
+        <div class="section-title">Imágenes de referencia</div>
+        <div class="imgs-wrap" id="outImagenes"></div>
+      </div>
+
+      <div class="note"><b>NOTA:</b> <span id="outNota"></span></div>
+
+      <div class="note" style="margin-top:16px;">
+        <b id="outMiNombre"></b><br>
+        <span id="outMiEmail"></span><br>
+        Contacto: <span id="outMiContacto"></span>
+      </div>
+
+      <div class="thanks">¡GRACIAS POR SU CONFIANZA!</div>
+    </div>
+  </div>
+
+  <script>
+    function addTrabajo() {
+      const d = document.createElement('div');
+      d.className = 'row';
+      d.innerHTML = `
+        <div class="row-grid">
+          <input class="t_desc" placeholder="Descripción *">
+          <textarea class="t_det" placeholder="Detalles"></textarea>
+          <!-- ✅ mobile-friendly decimal -->
+          <input class="t_cost" placeholder="Costo (opcional)" inputmode="decimal">
+          <button class="trash" onclick="this.closest('.row').remove()">×</button>
+        </div>
+      `;
+      document.getElementById('trabajos').appendChild(d);
+    }
+
+    let imgs = [];
+
+    document.getElementById('imagenes').onchange = (e) => {
+      imgs = [];
+      [...e.target.files].slice(0, 2).forEach((f) => {
+        const r = new FileReader();
+        r.onload = (ev) => imgs.push(ev.target.result);
+        r.readAsDataURL(f);
+      });
+    };
+
+    function generar() {
+      document.getElementById('outServicio').textContent = servicio.value;
+
+      outCliNombre.textContent = cliNombre.value;
+      outCliContacto.textContent = cliContacto.value;
+      outCliDir.textContent = cliDir.value;
+
+      outCotNum.textContent = cotNum.value;
+      outFecha.textContent = fecha.value.split('-').reverse().join('/');
+
+      let total = 0;
+      outTrabajosBody.innerHTML = '';
+
+      document.querySelectorAll('.row').forEach((r) => {
+        const d = r.querySelector('.t_desc').value;
+        const det = r.querySelector('.t_det').value;
+        const c = parseFloat(r.querySelector('.t_cost').value) || 0;
+
+        total += c;
+
+        outTrabajosBody.innerHTML += `
+          <tr>
+            <td>${d}</td>
+            <td>${det.replace(/\n/g,'<br>')}</td>
+            <td style="text-align:right">${c.toFixed(2)}</td>
+          </tr>
+        `;
+      });
+
+      outTotal.textContent = total.toFixed(2);
+      outNota.textContent = nota.value || '—';
+
+      imgsSection.style.display = imgs.length ? 'block' : 'none';
+      outImagenes.innerHTML = '';
+
+      imgs.forEach((src) => {
+        const i = document.createElement('img');
+        i.src = src;
+        i.style.width = imgs.length === 1 ? '60%' : '45%';
+        outImagenes.appendChild(i);
+      });
+
+      outMiNombre.textContent = miNombre.value;
+      outMiEmail.textContent = miEmail.value;
+      outMiContacto.textContent = miContacto.value;
+
+      doc.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    addTrabajo();
+  </script>
+</body>
+</html>
