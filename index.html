@@ -279,7 +279,7 @@
 
       <div class="section-title">Trabajos <span class="req">*</span></div>
       <div class="box" id="trabajos"></div>
-      <button onclick="addTrabajo()">➕ Agregar trabajo</button>
+      <button type="button" onclick="addTrabajo()">➕ Agregar trabajo</button>
 
       <div class="section-title">Imágenes (opcional)</div>
       <input type="file" id="imagenes" accept="image/*" multiple>
@@ -296,8 +296,9 @@
       </div>
 
       <div class="btnrow">
-        <button class="primary" onclick="generar()">📄 Generar</button>
-        <button onclick="window.print()">🖨️ Guardar</button>
+        <button class="primary" type="button" onclick="generar()">📄 Generar</button>
+        <!-- ✅ imprimimos y sugerimos nombre cambiando document.title -->
+        <button type="button" onclick="generar(); window.print()">🖨️ Guardar</button>
       </div>
     </div>
   </div>
@@ -373,7 +374,7 @@
           <textarea class="t_det" placeholder="Detalles"></textarea>
           <!-- ✅ mobile-friendly decimal -->
           <input class="t_cost" placeholder="Costo (opcional)" inputmode="decimal">
-          <button class="trash" onclick="this.closest('.row').remove()">×</button>
+          <button type="button" class="trash" onclick="this.closest('.row').remove()">×</button>
         </div>
       `;
       document.getElementById('trabajos').appendChild(d);
@@ -390,6 +391,38 @@
       });
     };
 
+    function buildSuggestedFileName(){
+      const num = (document.getElementById('cotNum')?.value || '').trim();
+      const cliente = (document.getElementById('cliNombre')?.value || '').trim();
+      const fechaISO = (document.getElementById('fecha')?.value || '').trim(); // YYYY-MM-DD
+
+      const safe = (s) => String(s || '')
+        .normalize('NFD').replace(/[\u0300-\u036f]/g,'') // sin tildes
+        .replace(/[^a-zA-Z0-9 _-]/g,'')                 // sin raros
+        .trim().replace(/\s+/g,'_')
+        .slice(0, 40);
+
+      const fecha = fechaISO ? fechaISO.split('-').reverse().join('-') : ''; // DD-MM-YYYY
+
+      return [
+        'Cotizacion',
+        num ? safe(num) : 'S_N',
+        cliente ? safe(cliente) : 'Cliente',
+        fecha ? safe(fecha) : ''
+      ].filter(Boolean).join('_');
+    }
+
+    let __oldTitle = document.title;
+
+    window.addEventListener('beforeprint', () => {
+      __oldTitle = document.title;
+      document.title = buildSuggestedFileName();
+    });
+
+    window.addEventListener('afterprint', () => {
+      document.title = __oldTitle;
+    });
+
     function generar() {
       document.getElementById('outServicio').textContent = servicio.value;
 
@@ -398,7 +431,9 @@
       outCliDir.textContent = cliDir.value;
 
       outCotNum.textContent = cotNum.value;
-      outFecha.textContent = fecha.value.split('-').reverse().join('/');
+
+      // ✅ no rompe si no hay fecha
+      outFecha.textContent = fecha.value ? fecha.value.split('-').reverse().join('/') : '';
 
       let total = 0;
       outTrabajosBody.innerHTML = '';
@@ -443,4 +478,3 @@
   </script>
 </body>
 </html>
-
