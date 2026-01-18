@@ -275,6 +275,12 @@
           <label>Dirección <span class="req">*</span></label>
           <input id="cliDir">
         </div>
+
+        <!-- ✅ NUEVO: Título del trabajo (para el encabezado del detalle) -->
+        <div class="field" style="grid-column: 1 / -1;">
+          <label>Título del trabajo</label>
+          <input id="tituloTrabajo" placeholder="">
+        </div>
       </div>
 
       <div class="section-title">Trabajos <span class="req">*</span></div>
@@ -330,7 +336,11 @@
         </tr>
       </table>
 
-      <div class="section-title">Detalle de trabajos a realizar</div>
+      <!-- ✅ AQUÍ se reemplaza el título por lo que escriba el usuario -->
+      <div class="section-title">
+  Detalle de trabajos a realizar:
+  <span id="outTituloTrabajo"></span>
+</div>
 
       <table>
         <tr class="section-h">
@@ -434,6 +444,10 @@
 
       // ✅ no rompe si no hay fecha
       outFecha.textContent = fecha.value ? fecha.value.split('-').reverse().join('/') : '';
+
+      // ✅ NUEVO: setear título del trabajo
+      const t = (document.getElementById('tituloTrabajo')?.value || '').trim();
+document.getElementById('outTituloTrabajo').textContent = t ? ' ' + t : '';
 
       let total = 0;
       outTrabajosBody.innerHTML = '';
